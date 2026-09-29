@@ -884,3 +884,20 @@ body.global-body .ego-anatomy,body.global-body .ego-explorers,body.global-body .
 .ego-spec-table-wrap tbody td{color:var(--caption-gray);font-size:.82rem;line-height:1.48}
 .ego-spec-table-wrap tbody td:nth-child(2){width:46%;color:var(--ink-page)}
 @media(max-width:760px){.ego-pack-intro,.ego-pack-stats,.ego-failure-types{grid-template-columns:1fr}.ego-spec-heading{align-items:start;flex-direction:column;gap:.75rem}.ego-spec-heading h3{text-align:left}}
+
+/* Focused data → post-training → evals map */
+.stack-canvas--focused{width:2052px;height:1258px}
+.stack-canvas--focused .stack-lane--value{top:18px;height:368px;background:rgba(223,236,238,.58)}
+.stack-canvas--focused .stack-lane--feedback{top:420px;height:368px;background:rgba(241,215,210,.48)}
+.stack-canvas--focused .stack-lane--refinery{top:822px;height:392px;background:rgba(229,225,231,.62)}
+.stack-canvas--focused .stack-node{min-height:300px}
+.stack-canvas--focused .stack-node--assurance{--node-accent:#805a9c}
+.stack-canvas--focused .stack-player--assurance{border-color:#b8a4c8;background:#f2edf6;color:#5f3e78}
+.stack-canvas--focused .stack-player--assurance:before{background:#805a9c}
+.stack-canvas--focused .stack-node--broad{width:542px}
+.stack-canvas--focused .stack-node--models-market{width:832px}
+.stack-canvas--focused .stack-node__players{gap:6px}
+.stack-canvas--focused .stack-node--broad .stack-player,
+.stack-canvas--focused .stack-node--models-market .stack-player{font-size:7.5px}
+.stack-player__logo{width:13px;height:13px;flex:none;border-radius:3px;background:#fff;object-fit:contain}
+.stack-player--has-logo:before{display:none}
