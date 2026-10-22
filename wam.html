@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Label Between Egocentric Video and Robot Action</title>
+<meta name="description" content="An operational case study for cross-embodiment World Action Model data.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="global-body">
+<main class="cs-doc" id="top">
+  <nav class="cs-site-nav" aria-label="Case studies">
+    <a href="index.html">Experience loop</a>
+    <a href="wam.html" aria-current="page">WAM contract</a>
+  </nav>
+
+  <article>
+    <header class="cs-header">
+      <p class="cs-label">Operational case study · Cross-embodiment WAM data</p>
+      <h1>The Label Between Egocentric Video and Robot Action</h1>
+      <p class="cs-subtitle">An operational case study for cross-embodiment World Action Model data</p>
+    </header>
+
+    <section id="problem">
+      <p class="cs-section-number">01</p>
+      <h2>The problem</h2>
+      <p>Egocentric video is becoming useful robot training data. DreamZero showed the clearest result for World Action Models (WAMs): adding 12 minutes of video-only human demonstrations for nine unseen tasks raised average task progress from 38.3% to 54.3%. The human clips supplied visual experience, not recovered robot actions. <a href="https://arxiv.org/abs/2602.15922">DreamZero, §5.1 Q4 ↗</a></p>
+
+      <p>That distinction matters. A human demonstration can show what task progress looks like without specifying how a different body should produce it.</p>
+
+      <p>Most familiar annotations describe the source video:</p>
+      <ul>
+        <li>where the hand and object are;</li>
+        <li>when contact or a state change occurs;</li>
+        <li>how the wrist and fingers move;</li>
+        <li>which verb describes the activity;</li>
+        <li>whether the final state appears successful.</li>
+      </ul>
+
+      <p>These labels are valuable, but they do not answer the cross-embodiment question:</p>
+      <blockquote class="cs-key-question">What physical relationship must survive when this interaction is performed by a different robot?</blockquote>
+
+      <p>A robot may need a different grasp, approach direction, supporting action, or arm path from the human demonstrator. Conversely, a generated robot video may look smooth and reach the correct final frame while showing contact that is physically wrong, causally unsupported, or impossible for the target embodiment.</p>
+
+      <p>This case study proposes a data operation for that gap: the <strong>embodiment-invariant interaction contract</strong>.</p>
+    </section>
+
+    <section id="wam-problem">
+      <p class="cs-section-number">02</p>
+      <h2>Why this is a WAM data problem</h2>
+
+      <h3>Dream-1 and the next frontier</h3>
+      <p>Dream-1 shows that video can support meaningful zero-shot transfer across unseen robot embodiments. Its remaining limitations help locate the next frontier: determining which physical aspects of an interaction must remain invariant when the robot’s morphology or feasible motion changes. <a href="https://dreamlabs.ai/research/dream-1/">Dream-1 research release ↗</a></p>
+
+      <p>Pixels create a bridge across embodiments, but they do not by themselves define which parts of an interaction are allowed to change.</p>
+
+      <h3>Transfer evidence is not ordinary video quality</h3>
+      <p>Recent work is beginning to expose this missing layer. H2R-Bench evaluates human-to-robot video transfer using goal completion, action events, functional contact, object response, and embodiment correctness. Across the evaluated models, ordinary video quality had weak rank association with the transfer-aware score.</p>
+
+      <p>In a matched ablation, replacing the complete demonstration with nine ordered frames preserved much of the final-state and broad action evidence, yet the transfer score fell by <strong>27.6 points</strong> for a parallel-jaw gripper and <strong>41.4 points</strong> for a dexterous hand; video quality barely changed. <a href="https://arxiv.org/abs/2608.13049">H2R-Bench ↗</a></p>
+
+      <p class="cs-callout"><strong>Operational implication:</strong> final states and sparse keyframes are not enough. The dataset must preserve and describe the interaction that caused the state change.</p>
+    </section>
+
+    <section id="workflow">
+      <p class="cs-section-number">03</p>
+      <h2>The operating workflow</h2>
+
+      <figure class="cs-workflow-figure" aria-labelledby="workflow-figure-caption">
+        <img class="cs-workflow-image" src="assets/wam-operating-workflow.png" alt="Flowchart showing an egocentric clip moving through observability review, source evidence, transfer invariants, target-robot binding, transfer decisions, and contrastive verification." width="2172" height="724">
+        <figcaption id="workflow-figure-caption">Operational qualification flow from source evidence to a target-robot training or evaluation record.</figcaption>
+        <div class="cs-workflow-scroll" hidden aria-hidden="true">
+          <svg class="cs-workflow-diagram" viewBox="0 0 1940 620" role="img" aria-labelledby="workflow-diagram-title workflow-diagram-desc">
+            <title id="workflow-diagram-title">Operating workflow for qualifying egocentric interaction data</title>
+            <desc id="workflow-diagram-desc">A left-to-right flow from an egocentric human clip through observability, source evidence, transfer invariants, target robot binding, transfer decisions, contrastive verification, and qualification or revision.</desc>
+            <defs>
+              <marker id="workflow-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L10,5 L0,10 Z" class="wf-arrowhead"/>
+              </marker>
+            </defs>
+
+            <g class="wf-edges">
+              <path d="M190 305 H225"/>
+              <path d="M382 255 L450 155"/>
+              <path d="M410 305 H450"/>
+              <path d="M710 305 H760"/>
+              <path d="M1040 305 H1080"/>
+              <path d="M1045 500 C1100 500 1090 390 1120 350"/>
+              <path d="M1220 260 C1260 220 1260 90 1290 90"/>
+              <path d="M1240 290 C1260 270 1260 210 1290 210"/>
+              <path d="M1240 320 C1260 335 1260 350 1290 350"/>
+              <path d="M1220 350 C1260 390 1260 480 1290 480"/>
+              <path d="M1470 90 C1520 90 1530 170 1575 195"/>
+              <path d="M1500 210 H1550"/>
+              <path d="M1730 230 H1760"/>
+              <path d="M1640 310 V445 C1640 460 1630 470 1610 470"/>
+            </g>
+
+            <g class="wf-edge-labels">
+              <text x="407" y="194">No</text>
+              <text x="428" y="294">Yes</text>
+              <text x="1743" y="218">Pass</text>
+              <text x="1653" y="406">Fail</text>
+            </g>
+
+            <g class="wf-node" aria-label="Egocentric human clip">
+              <rect x="20" y="270" width="170" height="70" rx="10"/>
+              <text x="105" y="310">Egocentric human clip</text>
+            </g>
+
+            <g class="wf-node wf-decision" aria-label="Interaction observable?">
+              <polygon points="230,305 320,225 410,305 320,385"/>
+              <text x="320" y="300"><tspan x="320">Interaction</tspan><tspan x="320" dy="20">observable?</tspan></text>
+            </g>
+
+            <g class="wf-node wf-route" aria-label="Route: second view, instrumented collection, or exclusion">
+              <rect x="450" y="105" width="250" height="100" rx="10"/>
+              <text x="575" y="140"><tspan x="575">Route: second view,</tspan><tspan x="575" dy="20">instrumented collection,</tspan><tspan x="575" dy="20">or exclusion</tspan></text>
+            </g>
+
+            <g class="wf-node wf-core" aria-label="Source evidence packet: timestamps, entities, contact status, object response, state transition">
+              <rect x="450" y="250" width="260" height="110" rx="10"/>
+              <text x="580" y="277"><tspan class="wf-node-title" x="580">Source evidence packet</tspan><tspan x="580" dy="22">timestamps · entities · contact status</tspan><tspan x="580" dy="20">object response · state transition</tspan></text>
+            </g>
+
+            <g class="wf-node wf-core" aria-label="Transfer invariant: required effect, contact-response relation, support constraint, allowed freedoms">
+              <rect x="760" y="250" width="280" height="110" rx="10"/>
+              <text x="900" y="277"><tspan class="wf-node-title" x="900">Transfer invariant</tspan><tspan x="900" dy="22">required effect · contact-response relation</tspan><tspan x="900" dy="20">support constraint · allowed freedoms</tspan></text>
+            </g>
+
+            <g class="wf-node wf-spec" aria-label="Robot specification: end-effector, workspace, kinematics, sensing">
+              <rect x="805" y="455" width="240" height="90" rx="10"/>
+              <text x="925" y="482"><tspan class="wf-node-title" x="925">Robot specification</tspan><tspan x="925" dy="21">end-effector · workspace</tspan><tspan x="925" dy="19">kinematics · sensing</tspan></text>
+            </g>
+
+            <g class="wf-node wf-decision" aria-label="Bind to target robot">
+              <polygon points="1080,305 1160,235 1240,305 1160,375"/>
+              <text x="1160" y="300"><tspan x="1160">Bind to</tspan><tspan x="1160" dy="20">target robot</tspan></text>
+            </g>
+
+            <g class="wf-node wf-outcome" aria-label="Direct transfer">
+              <rect x="1290" y="60" width="180" height="60" rx="10"/>
+              <text x="1380" y="95">Direct transfer</text>
+            </g>
+            <g class="wf-node wf-outcome" aria-label="Transfer with adaptation">
+              <rect x="1290" y="180" width="210" height="60" rx="10"/>
+              <text x="1395" y="215">Transfer with adaptation</text>
+            </g>
+            <g class="wf-node wf-muted" aria-label="Unsupported">
+              <rect x="1290" y="320" width="160" height="60" rx="10"/>
+              <text x="1370" y="355">Unsupported</text>
+            </g>
+            <g class="wf-node wf-muted" aria-label="Infeasible">
+              <rect x="1290" y="450" width="150" height="60" rx="10"/>
+              <text x="1365" y="485">Infeasible</text>
+            </g>
+
+            <g class="wf-node wf-decision" aria-label="Contrastive verification">
+              <polygon points="1550,230 1640,150 1730,230 1640,310"/>
+              <text x="1640" y="225"><tspan x="1640">Contrastive</tspan><tspan x="1640" dy="20">verification</tspan></text>
+            </g>
+
+            <g class="wf-node wf-success" aria-label="Qualified training or evaluation record">
+              <rect x="1760" y="190" width="170" height="80" rx="10"/>
+              <text x="1845" y="218"><tspan x="1845">Qualified training or</tspan><tspan x="1845" dy="20">evaluation record</tspan></text>
+            </g>
+
+            <g class="wf-node wf-reject" aria-label="Revise or reject">
+              <rect x="1450" y="440" width="160" height="60" rx="10"/>
+              <text x="1530" y="475">Revise or reject</text>
+            </g>
+          </svg>
+        </div>
+      </figure>
+
+      <div class="cs-step">
+        <p class="cs-step-number">Step 1</p>
+        <h3>Admit only interactions that can be grounded</h3>
+        <p>A candidate clip must make the manipulated entity, task-relevant state change, and essential interaction assessable. The retained interval should include the approach, contact or causal event, object response, and stable consequence—not merely three keyframes.</p>
+        <p>When essential contact or object state is hidden, the reviewer records <code>not_observable</code>; the operation does not fill the gap with a confident label. A second view or synchronized sensor may resolve the case, but an inferred force or grasp should never be promoted into measurement.</p>
+        <p>This is narrower than generic video quality control. A blurry background may be irrelevant. A clean clip with an invisible contact event may be unusable for this contract.</p>
+      </div>
+
+      <div class="cs-step">
+        <p class="cs-step-number">Step 2</p>
+        <h3>Derive the invariant from source evidence</h3>
+        <p>The source pass records the interaction interval, relevant entities, observable precondition and postcondition, contact status, and resulting object response. Every claim is marked <code>observed</code>, <code>inferred</code>, or <code>not_observable</code> and linked to supporting frames.</p>
+        <p>Only then does the reviewer derive the transfer invariant: the required effect, the contact–response relationship that produces it, any support constraint, and the execution variables allowed to change. Every requirement must point back to source evidence. If the video supports only an object response, the contract cannot claim the exact contact, intent, force, or hand configuration that caused it.</p>
+      </div>
+
+      <div class="cs-step">
+        <p class="cs-step-number">Step 3</p>
+        <h3>Bind the contract to a specified robot</h3>
+        <p>The same source contract is reviewed against the target embodiment:</p>
+        <ul>
+          <li>end-effector type and usable contact surfaces;</li>
+          <li>available single-arm or bimanual roles;</li>
+          <li>reachable workspace and likely IK constraints;</li>
+          <li>collision or arm-path concerns;</li>
+          <li>whether an equivalent contact strategy exists;</li>
+          <li>whether compliance, tactile sensing, or target-robot data is required.</li>
+        </ul>
+        <p class="cs-note">This is an eligibility decision, not a guarantee that a trained policy will succeed.</p>
+      </div>
+
+      <div class="cs-step">
+        <p class="cs-step-number">Step 4</p>
+        <h3>Verify with contrastive cases</h3>
+        <p>Ordinary success labels are weak tests of the contract. Quality control should include pairs that differ in one physically important way:</p>
+        <ul>
+          <li>correct final state versus correct causal interaction;</li>
+          <li>correct contact region versus wrong manipulation mode;</li>
+          <li>human-like motion versus robot-feasible motion;</li>
+          <li>apparent contact versus contact hidden by occlusion;</li>
+          <li>one valid strategy versus a different but equally valid embodiment-specific strategy;</li>
+          <li>visually plausible motion versus an IK- or collision-infeasible future.</li>
+        </ul>
+        <p>These contrasts make the record useful for evaluating generated futures, selecting human clips for a target robot, or auditing synthetic ego-to-robot data. They test whether the model preserved function rather than merely appearance.</p>
+      </div>
+    </section>
+
+    <section id="related">
+      <p class="cs-section-number">04</p>
+      <h2>How this relates to existing work</h2>
+      <p>The proposal does not claim that functional interaction annotation is untouched territory. It combines and operationalizes directions that are already emerging:</p>
+
+      <ul class="cs-related-work">
+        <li><strong>H2R-Bench</strong> uses source-grounded goals, required events, functional contact regions and modes, object responses, support roles, and target-embodiment strategies; every annotation is manually verified. <a href="https://arxiv.org/abs/2608.13049">Paper ↗</a></li>
+        <li><strong>EgoLAP</strong> replaces direct transfer of raw human trajectories with structured motion intent and reasoning grounded in contact, geometry, and object affordances. <a href="https://arxiv.org/abs/2610.08726">Paper ↗</a></li>
+        <li><strong>Ego2Robot</strong> converts human demonstrations across 15 robot morphologies and filters IK failures, collisions, action discontinuities, and semantic inconsistency at several quality-control levels. <a href="https://arxiv.org/abs/2608.02580">Paper ↗</a></li>
+        <li><strong>Ego4WAM</strong> finds that human–robot alignment, task diversity, duration, action supervision, and training stage have different downstream effects; aligned human data can reduce but not remove the need for robot supervision. <a href="https://arxiv.org/abs/2609.40341">Paper ↗</a></li>
+        <li><strong>ACE-Ego-0</strong> treats human pseudo-actions as noisy auxiliary supervision and weights them by reliability rather than treating them as equivalent to sensor-recorded robot actions. <a href="https://arxiv.org/abs/2606.17200">Paper ↗</a></li>
+      </ul>
+
+      <p>Established datasets already cover many generic labels. Ego4D marks precondition, contact, point of no return, postcondition, hands, tools, objects, and state changes. HOT3D and EgoDex provide rich 3D hand and body trajectories. ContactPose provides detailed hand–object contact data.</p>
+
+      <p class="cs-links"><a href="https://ego4d-data.org/docs/benchmarks/hands-and-objects/">Ego4D Hands and Objects ↗</a> <a href="https://arxiv.org/abs/2411.19167">HOT3D ↗</a> <a href="https://arxiv.org/abs/2505.11709">EgoDex ↗</a> <a href="https://arxiv.org/abs/2007.09545">ContactPose ↗</a></p>
+
+      <p>The proposed contribution is not to repeat these annotations; it is to turn available evidence into a decision about what is invariant, adaptable, unsupported, or infeasible for another embodiment.</p>
+    </section>
+
+    <section id="boundaries">
+      <p class="cs-section-number">05</p>
+      <h2>Boundaries</h2>
+      <p>This workflow can support source curation, cross-embodiment evaluation, targeted human review, and the qualification of generated or retargeted training data. It does not establish that the resulting annotations improve policy success.</p>
+
+      <p>It also cannot recover information absent from the sensors. RGB video does not directly measure force, tactile state, friction, or grasp stability. A contract may identify when those variables matter and route a case toward instrumented collection, but it must not invent them.</p>
+
+      <p>Finally, embodiment invariance is conditional, not universal. A contact strategy transferable between two parallel grippers may fail for a suction cup or dexterous hand. Each transfer claim therefore names the target embodiment and retains the evidence used to make the decision.</p>
+    </section>
+
+    <section id="conclusion" class="cs-conclusion">
+      <p class="cs-section-number">06</p>
+      <h2>Conclusion</h2>
+      <p>The frontier in egocentric WAM data is not another exhaustive action taxonomy. It is deciding what evidence can cross the embodiment boundary.</p>
+
+      <p>An interaction contract makes that decision explicit. It preserves the physical function demonstrated in video, allows robot-specific execution to change, exposes unsupported inference, and rejects futures that look correct without being physically grounded.</p>
+
+      <p>The resulting annotation answers a more useful question than “What did the human do?”</p>
+      <blockquote class="cs-final-question">What must this robot preserve for the same interaction to remain valid?</blockquote>
+    </section>
+
+    <footer class="cs-footer">
+      <a href="case-study-interaction-contracts.md">Source document ↗</a>
+      <a href="#top">Return to top ↑</a>
+    </footer>
+  </article>
+</main>
+</body>
+</html>
